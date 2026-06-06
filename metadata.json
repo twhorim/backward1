@@ -1,0 +1,8 @@
+{
+  "name": "Remix: 중등 AI디지털 백워드 설계 시뮬레이터",
+  "description": "2022 개정 교육과정 기준 중등학교 AI·디지털 기반 교수학습 및 과정 중심 평가 설계를 단계별로 수행하고 양식을 출력할 수 있는 장학 시뮬레이터입니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
