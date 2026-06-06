@@ -37,11 +37,28 @@ export default function Stage1Form({ data, updateData, onNext }: Stage1FormProps
     "초등학교 6학년"
   ];
 
-  const isCustomSubject = data.subject && !SUBJECT_OPTIONS.includes(data.subject);
-  const selectSubjectValue = isCustomSubject ? "기타" : (data.subject || "");
+  const isCustomSubject = !!data.subject && !SUBJECT_OPTIONS.includes(data.subject);
+  const isCustomGrade = !!data.grade && !GRADE_OPTIONS.includes(data.grade);
 
-  const isCustomGrade = data.grade && !GRADE_OPTIONS.includes(data.grade);
-  const selectGradeValue = isCustomGrade ? "기타" : (data.grade || "");
+  const [prevSubject, setPrevSubject] = useState(data.subject);
+  const [prevGrade, setPrevGrade] = useState(data.grade);
+  const [customSubjectActive, setCustomSubjectActive] = useState(isCustomSubject);
+  const [customGradeActive, setCustomGradeActive] = useState(isCustomGrade);
+
+  if (data.subject !== prevSubject) {
+    setPrevSubject(data.subject);
+    setCustomSubjectActive(isCustomSubject);
+  }
+  if (data.grade !== prevGrade) {
+    setPrevGrade(data.grade);
+    setCustomGradeActive(isCustomGrade);
+  }
+
+  const showCustomSubjectInput = customSubjectActive || isCustomSubject;
+  const selectSubjectValue = showCustomSubjectInput ? "기타" : (data.subject || "");
+
+  const showCustomGradeInput = customGradeActive || isCustomGrade;
+  const selectGradeValue = showCustomGradeInput ? "기타" : (data.grade || "");
 
   const handleAISuggest = async () => {
     if (!data.subject.trim() || !data.achievementStandard.trim()) {
@@ -110,8 +127,10 @@ export default function Stage1Form({ data, updateData, onNext }: Stage1FormProps
               onChange={(e) => {
                 const val = e.target.value;
                 if (val === "기타") {
+                  setCustomSubjectActive(true);
                   updateData({ subject: isCustomSubject ? data.subject : "" });
                 } else {
+                  setCustomSubjectActive(false);
                   updateData({ subject: val });
                 }
               }}
@@ -125,7 +144,7 @@ export default function Stage1Form({ data, updateData, onNext }: Stage1FormProps
               <option value="기타">기타 (직접 입력)</option>
             </select>
           </div>
-          {(selectSubjectValue === "기타" || isCustomSubject) && (
+          {showCustomSubjectInput && (
             <div className="animate-fade-in">
               <input
                 type="text"
@@ -151,8 +170,10 @@ export default function Stage1Form({ data, updateData, onNext }: Stage1FormProps
               onChange={(e) => {
                 const val = e.target.value;
                 if (val === "기타") {
+                  setCustomGradeActive(true);
                   updateData({ grade: isCustomGrade ? data.grade : "" });
                 } else {
+                  setCustomGradeActive(false);
                   updateData({ grade: val });
                 }
               }}
@@ -166,7 +187,7 @@ export default function Stage1Form({ data, updateData, onNext }: Stage1FormProps
               <option value="기타">기타 (직접 입력)</option>
             </select>
           </div>
-          {(selectGradeValue === "기타" || isCustomGrade) && (
+          {showCustomGradeInput && (
             <div className="animate-fade-in">
               <input
                 type="text"
